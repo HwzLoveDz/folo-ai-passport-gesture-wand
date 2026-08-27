@@ -2,6 +2,14 @@
 
 **Mote Wand** 是基于 FoloToy AI Passport 的可编程手势控制固件。设备通过 BLE HID 键盘连接主机，QMI8658A 为每个宏学习三次六轴轨迹；之后按住 `OK` 重复任一已训练轨迹并松手，固件会自动识别对应宏并执行动作。电脑或手机无需安装驱动。
 
+## 界面预览
+
+| 主界面 | 启动验证 | 手势管理 |
+| :---: | :---: | :---: |
+| <img src="simulator/out/current-home.png" width="200" alt="Mote Wand 主界面"> | <img src="simulator/out/current-pin.png" width="200" alt="启动 PIN 界面"> | <img src="simulator/out/current-menu.png" width="200" alt="手势管理界面"> |
+| 手势录制 | 识别成功 | 清除确认 |
+| <img src="simulator/out/current-recording.png" width="200" alt="手势录制界面"> | <img src="simulator/out/current-success.png" width="200" alt="手势识别成功界面"> | <img src="simulator/out/current-clear-confirm.png" width="200" alt="清除手势确认界面"> |
+
 ## 当前功能
 
 - `AUTH_SEQUENCE`：输入本地配置的数字按键序列并发送回车。
