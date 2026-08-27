@@ -1,0 +1,11 @@
+menu "Mote Wand"
+
+    config MOTE_WAND_ACTION_SEQUENCE
+        string "Numeric HID action sequence"
+        default ""
+        help
+            Digits sent over the encrypted BLE HID link after a gesture match.
+            Enter is appended automatically. The value is stored only in the
+            local sdkconfig file, which is excluded from Git. Maximum 32 digits.
+
+endmenu
