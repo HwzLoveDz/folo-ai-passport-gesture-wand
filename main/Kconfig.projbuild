@@ -1,11 +1,32 @@
 menu "Mote Wand"
 
+    config MOTE_WAND_BOOT_PIN
+        string "Four-digit boot access PIN"
+        default "0000"
+        help
+            Exactly four digits used only for the on-device boot access screen.
+            This value is intentionally independent from the HID action sequence.
+
     config MOTE_WAND_ACTION_SEQUENCE
-        string "Numeric HID action sequence"
+        string "Six-digit HID action sequence"
         default ""
         help
-            Digits sent over the encrypted BLE HID link after a gesture match.
-            Enter is appended automatically. The value is stored only in the
-            local sdkconfig file, which is excluded from Git. Maximum 32 digits.
+            Six digits sent over the encrypted BLE HID link after an
+            AUTH_SEQUENCE match. Leave empty to build with that action disabled.
+            Enter is appended automatically. This value is not used by the boot
+            access screen and is stored only in the local sdkconfig file, which
+            is excluded from Git.
+
+    config MOTE_WAND_GESTURE_RESET_EPOCH
+        int "One-shot gesture reset epoch"
+        range 0 2147483647
+        default 0
+        help
+            Leave at 0 during normal use. The on-device manager can clear one
+            gesture directly. For a bulk development/recovery reset, increase
+            this value and flash once. On the first boot for each new value,
+            only the gesture model keys are erased; BLE bonds and other NVS
+            data are preserved. The applied value is stored in NVS so newly
+            recorded gestures are not erased again.
 
 endmenu

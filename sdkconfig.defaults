@@ -34,9 +34,18 @@ CONFIG_BT_NIMBLE_ENABLED=y
 CONFIG_BT_NIMBLE_HID_SERVICE=y
 CONFIG_BT_NIMBLE_SVC_HID_MAX_INSTANCES=1
 CONFIG_BT_NIMBLE_SVC_HID_MAX_RPTS=1
+CONFIG_BT_NIMBLE_BAS_SERVICE=y
+CONFIG_BT_NIMBLE_SVC_BAS_BATTERY_LEVEL_NOTIFY=y
+# 已配对主机的 LTK/IRK/CCCD 必须跨重启恢复，否则主机持有旧密钥而
+# 设备侧 RAM 为空，会在加密阶段反复连接、断开。
+CONFIG_BT_NIMBLE_NVS_PERSIST=y
 
 # --- 系统 ---
 CONFIG_FREERTOS_HZ=1000
+
+# --- Mote Wand access ---
+# The four-digit on-device gate is independent from the private HID sequence.
+CONFIG_MOTE_WAND_BOOT_PIN="0000"
 
 # 量产式启动只输出告警和错误，隐藏正常初始化过程的 INFO 日志。
 CONFIG_BOOTLOADER_LOG_LEVEL_WARN=y

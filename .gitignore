@@ -3,3 +3,14 @@ sdkconfig
 sdkconfig.old
 managed_components/
 .vscode/
+simulator/out/
+simulator/font-cache/
+
+# Local typography experiments. Keep only the five generated Kode Mono sizes
+# referenced by the firmware and host simulator under version control.
+main/fonts/kode_mono/ui_font_kode_*.c
+!main/fonts/kode_mono/ui_font_kode_regular_11.c
+!main/fonts/kode_mono/ui_font_kode_regular_13.c
+!main/fonts/kode_mono/ui_font_kode_bold_13.c
+!main/fonts/kode_mono/ui_font_kode_bold_15.c
+!main/fonts/kode_mono/ui_font_kode_bold_21.c

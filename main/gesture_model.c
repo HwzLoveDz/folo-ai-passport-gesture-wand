@@ -181,6 +181,55 @@ float gesture_similarity(const gesture_signature_t *a,
     return clampf(score, 0.0f, 100.0f);
 }
 
+gesture_classify_result_t gesture_signature_classify(
+    const gesture_signature_t *candidate,
+    const gesture_signature_t *models,
+    uint32_t valid_mask,
+    size_t model_count,
+    float minimum_score,
+    float ambiguity_floor,
+    float ambiguity_margin,
+    size_t *best_index,
+    size_t *second_index,
+    float *best_score,
+    float *second_score)
+{
+    size_t best = SIZE_MAX;
+    size_t second = SIZE_MAX;
+    float best_value = -1.0f;
+    float second_value = -1.0f;
+
+    if (candidate && models) {
+        if (model_count > 32U) model_count = 32U;
+        for (size_t i = 0; i < model_count; i++) {
+            if ((valid_mask & (1UL << i)) == 0U) continue;
+            float score = gesture_similarity(candidate, &models[i]);
+            if (score > best_value) {
+                second_value = best_value;
+                second = best;
+                best_value = score;
+                best = i;
+            } else if (score > second_value) {
+                second_value = score;
+                second = i;
+            }
+        }
+    }
+
+    if (best_index) *best_index = best;
+    if (second_index) *second_index = second;
+    if (best_score) *best_score = best_value;
+    if (second_score) *second_score = second_value;
+    if (best == SIZE_MAX || best_value < minimum_score) {
+        return GESTURE_CLASSIFY_NO_MATCH;
+    }
+    if (second != SIZE_MAX && second_value >= ambiguity_floor &&
+        best_value - second_value < ambiguity_margin) {
+        return GESTURE_CLASSIFY_AMBIGUOUS;
+    }
+    return GESTURE_CLASSIFY_MATCH;
+}
+
 void gesture_signature_average(const gesture_signature_t *items,
                                size_t count,
                                gesture_signature_t *out)

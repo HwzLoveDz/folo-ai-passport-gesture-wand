@@ -34,8 +34,21 @@ static const tone_step_t s_sample_ok[] = {{880, 45, 18}, {1100, 60, 0}};
 static const tone_step_t s_retry[] = {{470, 90, 25}, {310, 140, 0}};
 static const tone_step_t s_saved[] = {{620, 60, 22}, {850, 65, 22}, {1160, 110, 0}};
 static const tone_step_t s_match[] = {{900, 55, 18}, {1220, 65, 18}, {1540, 120, 0}};
+static const tone_step_t s_lock[] = {{1180, 52, 18}, {760, 58, 18}, {420, 100, 0}};
 static const tone_step_t s_reject[] = {{280, 120, 25}, {210, 150, 0}};
 static const tone_step_t s_reset[] = {{820, 55, 20}, {580, 60, 20}, {820, 80, 0}};
+static const tone_step_t s_menu_open[] = {{540, 35, 15}, {820, 55, 0}};
+static const tone_step_t s_menu_move[] = {{680, 28, 0}};
+static const tone_step_t s_menu_select[] = {{780, 35, 15}, {1080, 55, 0}};
+static const tone_step_t s_menu_back[] = {{720, 35, 15}, {480, 50, 0}};
+static const tone_step_t s_pin_move[] = {{760, 32, 0}};
+static const tone_step_t s_pin_confirm[] = {{920, 35, 12}, {1120, 48, 0}};
+static const tone_step_t s_pin_accepted[] = {
+    {720, 45, 16}, {1020, 55, 16}, {1420, 95, 0},
+};
+static const tone_step_t s_pin_rejected[] = {
+    {360, 70, 22}, {260, 95, 22}, {180, 130, 0},
+};
 static const tone_step_t s_error[] = {{190, 110, 45}, {190, 110, 45}, {190, 160, 0}};
 
 static const tone_pattern_t s_patterns[] = {
@@ -49,8 +62,17 @@ static const tone_pattern_t s_patterns[] = {
     [GESTURE_SOUND_RETRY] = {s_retry, 2},
     [GESTURE_SOUND_SAVED] = {s_saved, 3},
     [GESTURE_SOUND_MATCH] = {s_match, 3},
+    [GESTURE_SOUND_LOCK] = {s_lock, 3},
     [GESTURE_SOUND_REJECT] = {s_reject, 2},
     [GESTURE_SOUND_RESET] = {s_reset, 3},
+    [GESTURE_SOUND_MENU_OPEN] = {s_menu_open, 2},
+    [GESTURE_SOUND_MENU_MOVE] = {s_menu_move, 1},
+    [GESTURE_SOUND_MENU_SELECT] = {s_menu_select, 2},
+    [GESTURE_SOUND_MENU_BACK] = {s_menu_back, 2},
+    [GESTURE_SOUND_PIN_MOVE] = {s_pin_move, 1},
+    [GESTURE_SOUND_PIN_CONFIRM] = {s_pin_confirm, 2},
+    [GESTURE_SOUND_PIN_ACCEPTED] = {s_pin_accepted, 3},
+    [GESTURE_SOUND_PIN_REJECTED] = {s_pin_rejected, 3},
     [GESTURE_SOUND_ERROR] = {s_error, 3},
 };
 

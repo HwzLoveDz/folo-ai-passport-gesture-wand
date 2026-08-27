@@ -102,6 +102,26 @@ int main(void)
     assert(softer_score >= 75.0f);
     assert(wrong_score < 70.0f);
 
+    gesture_signature_t models[2] = {reference, wrong};
+    size_t best = SIZE_MAX;
+    size_t second = SIZE_MAX;
+    float best_match = 0.0f;
+    float second_match = 0.0f;
+    assert(gesture_signature_classify(&noisy, models, 0x03U, 2U, 75.0f,
+                                      70.0f, 8.0f, &best, &second,
+                                      &best_match, &second_match) ==
+           GESTURE_CLASSIFY_MATCH);
+    assert(best == 0U && best_match >= 75.0f);
+    assert(gesture_signature_classify(&wrong, models, 0x01U, 2U, 75.0f,
+                                      70.0f, 8.0f, &best, &second,
+                                      &best_match, &second_match) ==
+           GESTURE_CLASSIFY_NO_MATCH);
+    models[1] = reference;
+    assert(gesture_signature_classify(&reference, models, 0x03U, 2U, 75.0f,
+                                      70.0f, 8.0f, &best, &second,
+                                      &best_match, &second_match) ==
+           GESTURE_CLASSIFY_AMBIGUOUS);
+
     gesture_sample_t still[60];
     memset(still, 0, sizeof(still));
     for (size_t i = 0; i < 60U; i++) still[i].accel_g[2] = 1.0f;
