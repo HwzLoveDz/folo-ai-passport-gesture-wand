@@ -198,7 +198,7 @@ static void make_trace(int16_t trace[][UI_FUI_TRACE_AXES])
 static void make_link_history(ui_fui_t *ui)
 {
     static const int rssi_samples[UI_FUI_LINK_POINTS] = {
-        -72, -64, -69, -58, -62, -53, -57, -49,
+        -72, -64, -69, -58, -62, -53, -43, -39,
     };
     for (unsigned i = 0; i < UI_FUI_LINK_POINTS; i++) {
         ui_fui_set_link_quality(ui, true, rssi_samples[i]);

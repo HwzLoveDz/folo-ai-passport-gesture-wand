@@ -9,6 +9,11 @@ LV_FONT_DECLARE(ui_font_kode_bold_13);
 LV_FONT_DECLARE(ui_font_kode_bold_15);
 LV_FONT_DECLARE(ui_font_kode_bold_21);
 
+#define HEADER_PANEL_RIGHT       232
+#define BATTERY_SEGMENT_SIZE       9
+#define BATTERY_SEGMENT_GAP        3
+#define LINK_RSSI_LIVE_THRESHOLD (-44)
+
 static lv_obj_t *box(lv_obj_t *parent, int x, int y, int width, int height,
                      uint32_t background, lv_opa_t opacity)
 {
@@ -58,6 +63,37 @@ static void add_grid(lv_obj_t *screen)
     for (int y = 44; y < 298; y += 36) {
         box(screen, 0, y, 240, 1, UI_FUI_CYAN_DIM, 24);
     }
+}
+
+static void link_chart_draw_event(lv_event_t *event)
+{
+    lv_draw_task_t *draw_task = lv_event_get_draw_task(event);
+    if (!draw_task || lv_draw_task_get_type(draw_task) != LV_DRAW_TASK_TYPE_FILL) {
+        return;
+    }
+    lv_draw_dsc_base_t *base =
+        (lv_draw_dsc_base_t *)lv_draw_task_get_draw_dsc(draw_task);
+    if (!base || base->part != LV_PART_ITEMS) return;
+
+    lv_obj_t *chart = lv_event_get_target_obj(event);
+    lv_chart_series_t *series = lv_chart_get_series_next(chart, NULL);
+    lv_draw_fill_dsc_t *fill = lv_draw_task_get_fill_dsc(draw_task);
+    if (!series || !fill) return;
+
+    uint32_t count = lv_chart_get_point_count(chart);
+    if (count == 0U || base->id2 >= count) return;
+    int32_t *values = lv_chart_get_series_y_array(chart, series);
+    if (!values) return;
+    uint32_t start = lv_chart_get_x_start_point(chart, series);
+    uint32_t point = (start + base->id2) % count;
+    int32_t value = values[point];
+    if (value == LV_CHART_POINT_NONE) return;
+
+    // -100..-30 dBm is normalized to 0..100%; -44 dBm is the 80% point.
+    // Only the strongest samples keep the live LINK color. Everything below
+    // 80% returns to the orange FUI theme color.
+    fill->color = value >= LINK_RSSI_LIVE_THRESHOLD ?
+        lv_chart_get_series_color(chart, series) : lv_color_hex(UI_FUI_CYAN);
 }
 
 static void scan_y(void *object, int32_t y)
@@ -152,8 +188,19 @@ void ui_fui_create_with_typography(ui_fui_t *ui,
     lv_obj_align_to(subtitle, header_code_bottom, LV_ALIGN_OUT_RIGHT_MID,
                     8, 0);
 
+    const int battery_width =
+        (int)UI_FUI_BATTERY_SEGMENTS * BATTERY_SEGMENT_SIZE +
+        ((int)UI_FUI_BATTERY_SEGMENTS - 1) * BATTERY_SEGMENT_GAP;
+    lv_obj_t *battery_group = box(screen, 0, 0, battery_width,
+                                  BATTERY_SEGMENT_SIZE,
+                                  UI_FUI_BG, LV_OPA_TRANSP);
+    lv_obj_align_to(battery_group, title, LV_ALIGN_OUT_RIGHT_MID, 0, 0);
+    lv_obj_set_x(battery_group, HEADER_PANEL_RIGHT - battery_width);
     for (unsigned i = 0; i < UI_FUI_BATTERY_SEGMENTS; i++) {
-        ui->battery_segments[i] = box(screen, 175 + (int)i * 12, 7, 9, 9,
+        int x = (int)i * (BATTERY_SEGMENT_SIZE + BATTERY_SEGMENT_GAP);
+        ui->battery_segments[i] = box(battery_group, x, 0,
+                                      BATTERY_SEGMENT_SIZE,
+                                      BATTERY_SEGMENT_SIZE,
                                       UI_FUI_CYAN_DIM, LV_OPA_40);
     }
 
@@ -297,7 +344,9 @@ void ui_fui_create_with_typography(ui_fui_t *ui,
     lv_obj_set_size(ui->link_chart, 38, 31);
     lv_obj_set_style_pad_all(ui->link_chart, 0, 0);
     lv_obj_set_style_radius(ui->link_chart, 0, 0);
-    lv_obj_set_style_bg_opa(ui->link_chart, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_bg_color(ui->link_chart,
+                              lv_color_hex(UI_FUI_RUST), 0);
+    lv_obj_set_style_bg_opa(ui->link_chart, LV_OPA_30, 0);
     lv_obj_set_style_border_width(ui->link_chart, 0, 0);
     lv_obj_set_style_line_opa(ui->link_chart, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_style_pad_column(ui->link_chart, 1, LV_PART_MAIN);
@@ -312,6 +361,9 @@ void ui_fui_create_with_typography(ui_fui_t *ui,
                                           LV_CHART_AXIS_PRIMARY_Y);
     lv_chart_set_all_values(ui->link_chart, ui->link_series,
                             LV_CHART_POINT_NONE);
+    lv_obj_add_event_cb(ui->link_chart, link_chart_draw_event,
+                        LV_EVENT_DRAW_TASK_ADDED, NULL);
+    lv_obj_add_flag(ui->link_chart, LV_OBJ_FLAG_SEND_DRAW_TASK_EVENTS);
 
     box(ui->home_layer, 8, 254, 224, 1, UI_FUI_CYAN_DIM, LV_OPA_COVER);
     ui->home_help = label(ui->home_layer, "OK TRACE | UP MANAGER", 0, 257,
@@ -624,8 +676,7 @@ void ui_fui_set_battery(ui_fui_t *ui, bool available, int soc, int millivolts)
         return;
     }
 
-    uint32_t color = soc < 15 ? UI_FUI_RED :
-                     soc < 30 ? UI_FUI_AMBER : UI_FUI_GREEN;
+    uint32_t color = soc < 15 ? UI_FUI_RED : UI_FUI_CYAN;
     unsigned filled = soc > 0 ?
         ((unsigned)soc * UI_FUI_BATTERY_SEGMENTS + 99U) / 100U : 0U;
     for (unsigned i = 0; i < UI_FUI_BATTERY_SEGMENTS; i++) {
