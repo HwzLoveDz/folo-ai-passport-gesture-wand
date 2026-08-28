@@ -1401,7 +1401,10 @@ esp_err_t gesture_key_start(void)
     if (!credentials_config_valid()) return ESP_ERR_INVALID_ARG;
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        if ((err = nvs_flash_erase()) == ESP_OK) err = nvs_flash_init();
+        // Models and BLE bonds share NVS. Never erase them as an automatic
+        // recovery action; an explicit maintenance flow must own that choice.
+        ESP_LOGE(TAG, "NVS requires explicit recovery: %s", esp_err_to_name(err));
+        return err;
     }
     if (err != ESP_OK) return err;
 
