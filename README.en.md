@@ -4,6 +4,14 @@
 
 **Mote Wand** is programmable gesture-control firmware for the FoloToy AI Passport. It turns gestures into manageable, extensible device macros: the device connects to a host as a BLE HID keyboard and uses the QMI8658A to capture three six-axis training trajectories for each macro. Hold `OK`, repeat any trained trajectory, and release; Mote Wand identifies the matching macro and executes its action. No driver is required on the computer or phone.
 
+## UI Preview
+
+| Home | Boot Authentication | Gesture Manager |
+| :---: | :---: | :---: |
+| <img src="simulator/out/current-home.png" width="200" alt="Mote Wand home screen"> | <img src="simulator/out/current-pin.png" width="200" alt="Boot PIN screen"> | <img src="simulator/out/current-menu.png" width="200" alt="Gesture manager screen"> |
+| Gesture Recording | Recognition Success | Clear Confirmation |
+| <img src="simulator/out/current-recording.png" width="200" alt="Gesture recording screen"> | <img src="simulator/out/current-success.png" width="200" alt="Successful gesture recognition screen"> | <img src="simulator/out/current-clear-confirm.png" width="200" alt="Clear gesture confirmation screen"> |
+
 ## Design Inspiration & Visual Language
 
 **Product concept.** Mote Wand draws inspiration from the idea of casting spells by moving a wand in the *Harry Potter* series: a spatial gesture becomes more than something to recognize—it acts as a personal “spell” connecting a physical movement to a digital command. In this way, the project turns AI Passport into a digital wand that can learn, recognize, and manage multiple gestures.
@@ -20,14 +28,6 @@
   <br>
   <sub>The QMI8658A is located inside the red circle on the back of the device. Both nearby filter/decoupling capacitors are 100 nF.</sub>
 </p>
-
-## UI Preview
-
-| Home | Boot Authentication | Gesture Manager |
-| :---: | :---: | :---: |
-| <img src="simulator/out/current-home.png" width="200" alt="Mote Wand home screen"> | <img src="simulator/out/current-pin.png" width="200" alt="Boot PIN screen"> | <img src="simulator/out/current-menu.png" width="200" alt="Gesture manager screen"> |
-| Gesture Recording | Recognition Success | Clear Confirmation |
-| <img src="simulator/out/current-recording.png" width="200" alt="Gesture recording screen"> | <img src="simulator/out/current-success.png" width="200" alt="Successful gesture recognition screen"> | <img src="simulator/out/current-clear-confirm.png" width="200" alt="Clear gesture confirmation screen"> |
 
 ## Current Features
 

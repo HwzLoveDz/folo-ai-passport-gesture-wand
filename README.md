@@ -4,6 +4,14 @@
 
 **Mote Wand（魔杖）** 是基于 FoloToy AI Passport 的可编程手势控制固件。它把手势变成可管理、可扩展的设备宏：通过 BLE HID 键盘连接主机，QMI8658A 为每个宏学习三次六轴轨迹；之后按住 `OK` 重复任一已训练轨迹并松手，魔杖会自动识别对应宏并执行动作。电脑或手机无需安装驱动。
 
+## 界面预览
+
+| 主界面 | 启动验证 | 手势管理 |
+| :---: | :---: | :---: |
+| <img src="simulator/out/current-home.png" width="200" alt="Mote Wand 主界面"> | <img src="simulator/out/current-pin.png" width="200" alt="启动 PIN 界面"> | <img src="simulator/out/current-menu.png" width="200" alt="手势管理界面"> |
+| 手势录制 | 识别成功 | 清除确认 |
+| <img src="simulator/out/current-recording.png" width="200" alt="手势录制界面"> | <img src="simulator/out/current-success.png" width="200" alt="手势识别成功界面"> | <img src="simulator/out/current-clear-confirm.png" width="200" alt="清除手势确认界面"> |
+
 ## 设计灵感与视觉语言
 
 **产品概念。** Mote Wand 的灵感来自《哈利·波特》系列中“挥动魔杖完成施法”的想象：让一段空间手势不只被识别，也能成为连接现实动作与数字指令的个人“咒语”。项目借此把 AI Passport 转化为一支可以学习、识别并管理不同手势的数字魔杖。
@@ -20,14 +28,6 @@
   <br>
   <sub>QMI8658A 位于设备背部红圈处，芯片旁两颗滤波/去耦电容均为 100 nF。</sub>
 </p>
-
-## 界面预览
-
-| 主界面 | 启动验证 | 手势管理 |
-| :---: | :---: | :---: |
-| <img src="simulator/out/current-home.png" width="200" alt="Mote Wand 主界面"> | <img src="simulator/out/current-pin.png" width="200" alt="启动 PIN 界面"> | <img src="simulator/out/current-menu.png" width="200" alt="手势管理界面"> |
-| 手势录制 | 识别成功 | 清除确认 |
-| <img src="simulator/out/current-recording.png" width="200" alt="手势录制界面"> | <img src="simulator/out/current-success.png" width="200" alt="手势识别成功界面"> | <img src="simulator/out/current-clear-confirm.png" width="200" alt="清除手势确认界面"> |
 
 ## 当前功能
 
