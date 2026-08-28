@@ -33,6 +33,12 @@ Write C using four-space indentation and K&R-style braces, following nearby file
 
 Never commit passwords or other real action sequences. Configure them through the ignored local `sdkconfig` file.
 
+## Flash Safety — Mandatory for AI Agents
+
+AI agents and automated tools must never perform an irreversible Flash operation unless the user explicitly understands the exact target, consequences, and recovery limits, then separately authorizes that specific operation. This prohibition includes full-chip erase, eFuse writes, Secure Boot or Flash Encryption changes, key writes or destruction, unverified partition-table replacement, and deletion of NVS, BLE bonds, gesture models, or calibration data.
+
+An ordinary request to "flash" authorizes only the confirmed compatible, necessary application write. It must not be broadened into any other operation. Before writing, identify the live port and chip, inspect security and partition state, confirm image boundaries, and preserve recoverable user data.
+
 ## Testing Guidelines
 
 Before submitting, build from the repository root and inspect warnings. On hardware, verify menu navigation and the affected Display, Button, Audio, or Battery page. For pin, display-rotation, codec-clock, ADC, or DMA changes, explicitly record the observed hardware result in the PR. Do not increase LVGL buffers or audio allocations without checking ESP32-C3 internal RAM usage; the board has no PSRAM.
