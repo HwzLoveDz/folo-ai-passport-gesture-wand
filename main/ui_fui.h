@@ -23,7 +23,7 @@
 #define UI_FUI_MUTED       0x829097U
 
 #define UI_FUI_BATTERY_SEGMENTS   5U
-#define UI_FUI_MENU_ITEMS         2U
+#define UI_FUI_MENU_ITEMS         3U
 #define UI_FUI_MENU_ACTIONS       2U
 #define UI_FUI_PIN_DIGITS         4U
 #define UI_FUI_TRACE_POINTS      32U

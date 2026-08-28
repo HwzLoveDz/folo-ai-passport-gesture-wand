@@ -19,6 +19,7 @@
 
 - `AUTH_SEQUENCE`：输入本地配置的数字按键序列并发送回车。
 - `LOCK_HOST`：向 Windows 主机发送 `Win+L` 锁屏快捷键。
+- `NEW_TAB`：向当前前台浏览器发送 `Ctrl+T`；Chrome 中会新建标签页。
 - 独立四位启动 PIN（默认 `0000`）：解锁前不启动 BLE 广播，`UP` / `DOWN` 选数字，`OK` 确认。
 - 手势管理器：按宏定义名称列出模型，可直接重录或单独清除。
 - 每个宏三次录入，并自动定位偏差较大的样本。
@@ -89,4 +90,4 @@ bash simulator/preview.sh
 
 ## 安全边界
 
-这是便利型自动化工具，不是安全密钥。启动 PIN 只用于阻止随手操作，配置仍存在固件中；`LOCK_HOST` 当前固定为 Windows 的 `Win+L`，macOS、Linux 和手机需要另行定义快捷键。BLE 首次配对采用无输入设备常用的 Secure Connections Just Works，不具备 MITM 认证；未启用 Flash Encryption 的设备也可能被物理读取固件中的动作序列。产品化时应启用 Secure Boot、Flash Encryption，并优先使用可撤销的凭据而不是系统主密码。
+这是便利型自动化工具，不是安全密钥。启动 PIN 只用于阻止随手操作，配置仍存在固件中；`LOCK_HOST` 当前固定为 Windows 的 `Win+L`，`NEW_TAB` 固定为 `Ctrl+T` 且作用于当前前台程序，macOS、Linux 和手机需要按各自快捷键另行定义。BLE 首次配对采用无输入设备常用的 Secure Connections Just Works，不具备 MITM 认证；未启用 Flash Encryption 的设备也可能被物理读取固件中的动作序列。产品化时应启用 Secure Boot、Flash Encryption，并优先使用可撤销的凭据而不是系统主密码。

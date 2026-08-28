@@ -208,7 +208,7 @@ static void make_link_history(ui_fui_t *ui)
 static bool configure_state(ui_fui_t *ui, const char *state)
 {
     static const char *const names[UI_FUI_MENU_ITEMS] = {
-        "AUTH_SEQUENCE", "LOCK_HOST",
+        "AUTH_SEQUENCE", "LOCK_HOST", "NEW_TAB",
     };
     int16_t trace[UI_FUI_TRACE_POINTS][UI_FUI_TRACE_AXES];
     make_trace(trace);
@@ -236,10 +236,10 @@ static bool configure_state(ui_fui_t *ui, const char *state)
         ui_fui_set_trace(ui, trace, UI_FUI_TRACE_POINTS);
         ui_fui_set_trace_result(ui, UI_FUI_TRACE_RESULT_PASS);
     } else if (strcmp(state, "menu") == 0) {
-        ui_fui_set_manager(ui, UI_FUI_MANAGER_LIST, 0U, 0U,
+        ui_fui_set_manager(ui, UI_FUI_MANAGER_LIST, 2U, 0U,
                            UI_FUI_CONFIRM_CANCEL, 0x03U, names);
     } else if (strcmp(state, "detail") == 0) {
-        ui_fui_set_manager(ui, UI_FUI_MANAGER_DETAIL, 1U, 1U,
+        ui_fui_set_manager(ui, UI_FUI_MANAGER_DETAIL, 2U, 0U,
                            UI_FUI_CONFIRM_CANCEL, 0x03U, names);
     } else if (strcmp(state, "clear-confirm") == 0) {
         ui_fui_set_manager(ui, UI_FUI_MANAGER_CLEAR_CONFIRM, 1U, 1U,

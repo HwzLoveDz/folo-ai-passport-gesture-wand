@@ -29,6 +29,8 @@ _Static_assert(UI_FUI_TRACE_AXES == GESTURE_KEY_TRACE_AXES,
                "UI and gesture trace axes must match");
 _Static_assert(UI_FUI_PIN_DIGITS == GESTURE_KEY_PIN_DIGITS,
                "UI and gesture PIN lengths must match");
+_Static_assert(UI_FUI_MENU_ITEMS == GESTURE_MACRO_COUNT,
+               "UI and gesture macro counts must match");
 
 static ui_fui_t s_ui;
 static gesture_key_state_t s_last_state = (gesture_key_state_t)-1;
@@ -287,8 +289,12 @@ static void ui_tick(lv_timer_t *timer)
         state == GESTURE_KEY_MENU_CLEAR_DONE ||
         state == GESTURE_KEY_MENU_CLEAR_ERROR) {
         const char *names[UI_FUI_MENU_ITEMS] = {
-            gesture_key_macro_name(GESTURE_MACRO_AUTH_SEQUENCE),
-            gesture_key_macro_name(GESTURE_MACRO_LOCK_HOST),
+            [GESTURE_MACRO_AUTH_SEQUENCE] =
+                gesture_key_macro_name(GESTURE_MACRO_AUTH_SEQUENCE),
+            [GESTURE_MACRO_LOCK_HOST] =
+                gesture_key_macro_name(GESTURE_MACRO_LOCK_HOST),
+            [GESTURE_MACRO_NEW_TAB] =
+                gesture_key_macro_name(GESTURE_MACRO_NEW_TAB),
         };
         ui_fui_manager_view_t view = UI_FUI_MANAGER_LIST;
         if (state == GESTURE_KEY_MENU_DETAIL) {

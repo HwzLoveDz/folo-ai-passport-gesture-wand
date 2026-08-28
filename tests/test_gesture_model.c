@@ -102,7 +102,7 @@ int main(void)
     assert(softer_score >= 75.0f);
     assert(wrong_score < 70.0f);
 
-    gesture_signature_t models[2] = {reference, wrong};
+    gesture_signature_t models[3] = {reference, wrong, noisy};
     size_t best = SIZE_MAX;
     size_t second = SIZE_MAX;
     float best_match = 0.0f;
@@ -112,12 +112,17 @@ int main(void)
                                       &best_match, &second_match) ==
            GESTURE_CLASSIFY_MATCH);
     assert(best == 0U && best_match >= 75.0f);
+    assert(gesture_signature_classify(&noisy, models, 0x04U, 3U, 75.0f,
+                                      70.0f, 8.0f, &best, &second,
+                                      &best_match, &second_match) ==
+           GESTURE_CLASSIFY_MATCH);
+    assert(best == 2U && best_match > 99.0f);
     assert(gesture_signature_classify(&wrong, models, 0x01U, 2U, 75.0f,
                                       70.0f, 8.0f, &best, &second,
                                       &best_match, &second_match) ==
            GESTURE_CLASSIFY_NO_MATCH);
     models[1] = reference;
-    assert(gesture_signature_classify(&reference, models, 0x03U, 2U, 75.0f,
+    assert(gesture_signature_classify(&reference, models, 0x07U, 3U, 75.0f,
                                       70.0f, 8.0f, &best, &second,
                                       &best_match, &second_match) ==
            GESTURE_CLASSIFY_AMBIGUOUS);

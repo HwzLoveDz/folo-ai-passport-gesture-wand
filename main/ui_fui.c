@@ -14,6 +14,10 @@ LV_FONT_DECLARE(ui_font_kode_bold_21);
 #define BATTERY_SEGMENT_GAP        3
 #define LINK_RSSI_LIVE_THRESHOLD (-44)
 
+static const char *const s_menu_indices[UI_FUI_MENU_ITEMS] = {
+    "01", "02", "03",
+};
+
 static lv_obj_t *box(lv_obj_t *parent, int x, int y, int width, int height,
                      uint32_t background, lv_opa_t opacity)
 {
@@ -387,33 +391,35 @@ void ui_fui_create_with_typography(ui_fui_t *ui,
           ui->typography.strong, UI_FUI_CREAM);
     label(manager_header, "GESTURE MANAGER", 49, 4,
           ui->typography.title, UI_FUI_CREAM);
-    label(manager_header, "02 GESTURES / ON DEVICE", 49, 21,
+    label(manager_header, "03 GESTURES / ON DEVICE", 49, 21,
           ui->typography.meta, UI_FUI_MUTED);
 
-    ui->menu_list = box(ui->menu_layer, 8, 52, 224, 178,
+    ui->menu_list = box(ui->menu_layer, 8, 52, 224, 194,
                         UI_FUI_BG, LV_OPA_TRANSP);
     for (unsigned i = 0; i < UI_FUI_MENU_ITEMS; i++) {
-        int y = (int)i * 74;
-        ui->menu_rows[i] = box(ui->menu_list, 0, y, 224, 66,
+        int y = (int)i * 65;
+        ui->menu_rows[i] = box(ui->menu_list, 0, y, 224, 58,
                                UI_FUI_PANEL, LV_OPA_COVER);
         lv_obj_set_style_border_width(ui->menu_rows[i], 1, 0);
         lv_obj_set_style_border_color(ui->menu_rows[i],
                                       lv_color_hex(UI_FUI_RUST), 0);
-        ui->menu_row_index[i] = box(ui->menu_rows[i], 0, 0, 38, 64,
+        ui->menu_row_index[i] = box(ui->menu_rows[i], 0, 0, 38, 56,
                                     UI_FUI_RUST, LV_OPA_COVER);
-        label(ui->menu_row_index[i], i == 0U ? "01" : "02", 10, 8,
+        label(ui->menu_row_index[i], s_menu_indices[i], 10, 5,
               ui->typography.title, UI_FUI_CREAM);
-        label(ui->menu_row_index[i], "GS", 11, 32,
+        label(ui->menu_row_index[i], "GS", 11, 30,
               ui->typography.strong, UI_FUI_ORANGE);
-        ui->menu_row_name[i] = label(ui->menu_rows[i], "MACRO", 50, 9,
+        ui->menu_row_name[i] = label(ui->menu_rows[i], "MACRO", 50, 6,
                                      ui->typography.title, UI_FUI_CREAM);
-        ui->menu_row_state[i] = label(ui->menu_rows[i], "NOT RECORDED", 50, 35,
+        lv_obj_set_size(ui->menu_row_name[i], 145, 19);
+        lv_label_set_long_mode(ui->menu_row_name[i], LV_LABEL_LONG_CLIP);
+        ui->menu_row_state[i] = label(ui->menu_rows[i], "NOT RECORDED", 50, 33,
                                       ui->typography.meta, UI_FUI_MUTED);
         lv_obj_set_size(ui->menu_row_state[i], 88, 16);
         lv_label_set_long_mode(ui->menu_row_state[i], LV_LABEL_LONG_CLIP);
-        label(ui->menu_rows[i], "REC / CLR", 143, 35,
+        label(ui->menu_rows[i], "REC / CLR", 143, 33,
               ui->typography.meta, UI_FUI_MUTED);
-        label(ui->menu_rows[i], ">", 203, 20,
+        label(ui->menu_rows[i], ">", 203, 16,
               ui->typography.title, UI_FUI_ORANGE);
     }
 
@@ -761,7 +767,7 @@ void ui_fui_set_manager(ui_fui_t *ui, ui_fui_manager_view_t view,
         bool trained = (valid_mask & (1U << selected)) != 0U;
         lv_obj_add_flag(ui->menu_list, LV_OBJ_FLAG_HIDDEN);
         lv_obj_remove_flag(ui->menu_detail, LV_OBJ_FLAG_HIDDEN);
-        lv_label_set_text(ui->menu_detail_index, selected == 0U ? "01" : "02");
+        lv_label_set_text(ui->menu_detail_index, s_menu_indices[selected]);
         lv_label_set_text(ui->menu_detail_name,
                           names[selected] ? names[selected] : "UNNAMED");
         lv_label_set_text(ui->menu_detail_state,

@@ -68,6 +68,8 @@ static const char *TAG = "gesture_key";
 
 #define HID_KEY_ENTER                 0x28U
 #define HID_KEY_L                     0x0FU
+#define HID_KEY_T                     0x17U
+#define HID_MOD_LEFT_CTRL             0x01U
 #define HID_MOD_LEFT_GUI              0x08U
 #define ACTION_SEQUENCE_MAX_LENGTH    32U
 #define ACTION_SEQUENCE_DIGITS         6U
@@ -143,15 +145,19 @@ _Static_assert(sizeof(s_action_sequence) == 1U ||
                "Mote Wand HID action sequence must be empty or six digits");
 _Static_assert(sizeof(s_boot_pin) == GESTURE_KEY_PIN_DIGITS + 1U,
                "Mote Wand boot PIN must be four digits");
+_Static_assert(GESTURE_MACRO_COUNT <= 8U,
+               "Gesture model mask only supports eight macros");
 
 static const char *const s_macro_names[GESTURE_MACRO_COUNT] = {
     [GESTURE_MACRO_AUTH_SEQUENCE] = GESTURE_MACRO_AUTH_SEQUENCE_NAME,
     [GESTURE_MACRO_LOCK_HOST] = GESTURE_MACRO_LOCK_HOST_NAME,
+    [GESTURE_MACRO_NEW_TAB] = GESTURE_MACRO_NEW_TAB_NAME,
 };
 
 static const char *const s_model_keys[GESTURE_MACRO_COUNT] = {
     [GESTURE_MACRO_AUTH_SEQUENCE] = "auth_v2",
     [GESTURE_MACRO_LOCK_HOST] = "lock_v2",
+    [GESTURE_MACRO_NEW_TAB] = "tab_v2",
 };
 
 static struct ble_hs_adv_fields s_adv_fields;
@@ -589,6 +595,9 @@ static esp_err_t execute_macro(gesture_macro_t macro)
         // Windows lock shortcut. The BLE HID report is released immediately
         // after the chord so no modifier can remain latched on the host.
         return send_key_report(HID_MOD_LEFT_GUI, HID_KEY_L);
+    case GESTURE_MACRO_NEW_TAB:
+        // Ctrl+T opens a tab in Chrome and other common Windows browsers.
+        return send_key_report(HID_MOD_LEFT_CTRL, HID_KEY_T);
     default:
         return ESP_ERR_INVALID_ARG;
     }
