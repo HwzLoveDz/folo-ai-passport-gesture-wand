@@ -12,6 +12,8 @@ LV_FONT_DECLARE(ui_font_kode_bold_21);
 #define HEADER_PANEL_RIGHT       232
 #define BATTERY_SEGMENT_SIZE       9
 #define BATTERY_SEGMENT_GAP        3
+#define BATTERY_LOW_PERCENT       20
+#define BATTERY_CRITICAL_PERCENT  10
 #define LINK_RSSI_LIVE_THRESHOLD (-44)
 
 static const char *const s_menu_indices[UI_FUI_MENU_ITEMS] = {
@@ -205,7 +207,7 @@ void ui_fui_create_with_typography(ui_fui_t *ui,
         ui->battery_segments[i] = box(battery_group, x, 0,
                                       BATTERY_SEGMENT_SIZE,
                                       BATTERY_SEGMENT_SIZE,
-                                      UI_FUI_CYAN_DIM, LV_OPA_40);
+                                      UI_FUI_MUTED, LV_OPA_40);
     }
 
     ui->home_layer = box(screen, 0, 44, 240, 276,
@@ -676,15 +678,18 @@ void ui_fui_set_battery(ui_fui_t *ui, bool available, int soc, int millivolts)
     if (!available || soc < 0 || soc > 100) {
         for (unsigned i = 0; i < UI_FUI_BATTERY_SEGMENTS; i++) {
             lv_obj_set_style_bg_color(ui->battery_segments[i],
-                                      lv_color_hex(UI_FUI_CYAN_DIM), 0);
+                                      lv_color_hex(UI_FUI_MUTED), 0);
             lv_obj_set_style_bg_opa(ui->battery_segments[i], LV_OPA_40, 0);
         }
         return;
     }
 
-    uint32_t color = soc < 15 ? UI_FUI_RED : UI_FUI_CYAN;
+    uint32_t color = soc < BATTERY_CRITICAL_PERCENT ? UI_FUI_RED :
+                     soc < BATTERY_LOW_PERCENT ? UI_FUI_ORANGE : UI_FUI_TEAL;
+    // A valid 0% keeps one red segment visible so it cannot be mistaken for
+    // the unavailable all-gray state.
     unsigned filled = soc > 0 ?
-        ((unsigned)soc * UI_FUI_BATTERY_SEGMENTS + 99U) / 100U : 0U;
+        ((unsigned)soc * UI_FUI_BATTERY_SEGMENTS + 99U) / 100U : 1U;
     for (unsigned i = 0; i < UI_FUI_BATTERY_SEGMENTS; i++) {
         bool on = i < filled;
         lv_obj_set_style_bg_color(ui->battery_segments[i],
